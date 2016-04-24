@@ -1,0 +1,20 @@
+filebeat:
+  prospectors:
+    -
+      paths:
+        - /var/log/squid3/access.log
+      input_type: log
+      ignore_older: 24h
+      scan_frequency: 5s
+
+output:
+  logstash:
+    enabled: true
+    hosts: ["elk:5044"]
+
+shipper:
+
+logging:
+
+  files:
+    rotateeverybytes: 10485760 # = 10MB

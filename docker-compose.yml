@@ -1,0 +1,54 @@
+
+version: '2'
+services:
+
+  squidguard:
+    # either - build your git clone:
+    # build: .
+    # or use the image from docker hub:
+    image: muenchhausen/docker-squidguard:latest
+    environment:
+      # WPAD is optinal 
+      - WPAD_IP=192.168.99.100
+      - WPAD_NOPROXY_NET=192.168.0.0
+      - WPAD_NOPROXY_MASK=255.255.0.0
+      # blacklisting is optional: please read license of shallalist.de - there are restrictions for commercial use
+      #- UPDATE_BLACKLIST_URL=http://www.shallalist.de/Downloads/shallalist.tar.gz
+      # to embed your own config folder with squidGuard.conf:
+      #- SQUID_CONFIG_SOURCE=/custom-config
+      #- SQUID_UID=1000          # workaround for folder mapping problem on MAC OS: UserID for user proxy
+      # if you need your customized wpad.dat or block.html file, 
+      #    simply place them to your host volume that is mapped to SQUID_CONFIG_SOURCE
+    ports:
+      - "3128:3128"
+      - "80:80"
+    expose:
+      - 3128
+      - 80
+    volumes:
+      - /var/log/squid3
+
+  elk:
+    build: ./elk
+    hostname: elk
+    ports:
+      - "5601:5601"
+      - "9200:9200"
+      - "5000:5000"
+      - "5044:5044"
+    expose:
+      - 5601
+      - 9200
+      - 5000
+      - 5044
+
+  filebeat:
+    build: ./filebeat
+    environment:
+      - LOGSTASH_HOST=elk
+      - LOGSTASH_PORT=5000
+    links:
+      - elk
+      - squidguard
+    volumes_from:
+      - squidguard
