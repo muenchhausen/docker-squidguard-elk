@@ -6,6 +6,7 @@ filebeat:
       input_type: log
       ignore_older: 24h
       scan_frequency: 5s
+      document_type: squid
 
 output:
   logstash:
