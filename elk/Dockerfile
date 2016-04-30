@@ -11,7 +11,7 @@ RUN rm /etc/logstash/conf.d/*
 
 # Add Logstash configuration
 ADD 0001-beats-input.conf /etc/logstash/conf.d
-#ADD 5001-squid-filter.conf /etc/logstash/conf.d
+ADD 5001-squid-filter.conf /etc/logstash/conf.d
 ADD 9001-logstash-output.conf /etc/logstash/conf.d
 
 RUN mkdir -p /usr/share/GeoIP && \ 
