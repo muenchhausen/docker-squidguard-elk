@@ -3,22 +3,18 @@ version: '2'
 services:
 
   squidguard:
-    # either - build your git clone:
-    # build: .
-    # or use the image from docker hub:
     image: muenchhausen/docker-squidguard:latest
     environment:
-      # WPAD is optional 
-      - WPAD_IP=192.168.99.100
+      # I want to use WPAD
+      - WPAD_IP=192.168.10.11
       - WPAD_NOPROXY_NET=192.168.0.0
       - WPAD_NOPROXY_MASK=255.255.0.0
-      # blacklisting is optional: please read license of shallalist.de - there are restrictions for commercial use
-      #- UPDATE_BLACKLIST_URL=http://www.shallalist.de/Downloads/shallalist.tar.gz
-      # to embed your own config folder with squidGuard.conf:
-      #- SQUID_CONFIG_SOURCE=/custom-config
+      # here I want to use blacklists from shallalist, which are license restricted especially for commercial use
+      - UPDATE_BLACKLIST_URL=http://www.shallalist.de/Downloads/shallalist.tar.gz
+      # I have some config files I want to overwrite
+      # e.g. squidGuard.conf, wpad.dat and block.html:
+      - SQUID_CONFIG_SOURCE=/custom-config
       #- SQUID_UID=1000          # workaround for folder mapping problem on MAC OS: UserID for user proxy
-      # if you need your customized wpad.dat or block.html file, 
-      #    simply place them to your host volume that is mapped to SQUID_CONFIG_SOURCE
     ports:
       - "3128:3128"
       - "80:80"
@@ -26,6 +22,8 @@ services:
       - 3128
       - 80
     volumes:
+      # please adapt this to your needs
+      - /home/derk/docker-squidguard-elk/myconfig:/custom-config
       - /var/log/squid3
 
   elk:
