@@ -16,8 +16,6 @@ cd ..
 sudo su -
 docker-compose stop && docker-compose rm -f && docker-compose build && docker-compose up --force-recreate
 
-echo "Europe/Berlin" > /etc/timezone && dpkg-reconfigure -f noninteractive tzdata
-
 ```
 
 This product includes GeoLite data created by MaxMind, available from 
