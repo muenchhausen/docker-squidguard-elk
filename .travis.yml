@@ -16,4 +16,9 @@ install:
   - docker-compose up --force-recreate
 
 script:
-  - docker ps | grep -q blog
+  - wait 10
+  - docker-compose ps | grep -e "dockersquidguardelk_elk_1 .* Up"
+  - docker-compose ps | grep -e "dockersquidguardelk_filebeat_1 .* Up"
+  - docker-compose ps | grep -e "dockersquidguardelk_squidguard_1 .* Up"
+  - docker-compose stop
+
