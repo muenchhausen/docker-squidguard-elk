@@ -1,56 +1,52 @@
+squidguard:
+  image: muenchhausen/docker-squidguard:latest
+  environment:
+    - TZ=CEST
+    # I want to use WPAD
+    - WPAD_IP=192.168.10.11
+    - WPAD_NOPROXY_NET=192.168.0.0
+    - WPAD_NOPROXY_MASK=255.255.0.0
+    # here I want to use blacklists from shallalist, which are license restricted especially for commercial use
+    - UPDATE_BLACKLIST_URL=http://www.shallalist.de/Downloads/shallalist.tar.gz
+    # I have some config files I want to overwrite
+    # e.g. squidGuard.conf, wpad.dat and block.html:
+    - SQUID_CONFIG_SOURCE=/custom-config
+    #- SQUID_UID=1000          # workaround for folder mapping problem on MAC OS: UserID for user proxy
+  ports:
+    - "3128:3128"
+    - "80:80"
+  expose:
+    - 3128
+    - 80
+  volumes:
+    # please adapt this to your needs
+    - /home/derk/docker-squidguard-elk/myconfig:/custom-config
+    - /var/log/squid3
 
-version: '2'
-services:
+elk:
+  build: ./elk
+  hostname: elk
+  environment:
+    - TZ=CEST
+  ports:
+    - "5601:5601"
+    - "9200:9200"
+    - "5000:5000"
+    - "5044:5044"
+  expose:
+    - 5601
+    - 9200
+    - 5000
+    - 5044
 
-  squidguard:
-    image: muenchhausen/docker-squidguard:latest
-    environment:
-      - TZ=CEST
-      # I want to use WPAD
-      - WPAD_IP=192.168.10.11
-      - WPAD_NOPROXY_NET=192.168.0.0
-      - WPAD_NOPROXY_MASK=255.255.0.0
-      # here I want to use blacklists from shallalist, which are license restricted especially for commercial use
-      - UPDATE_BLACKLIST_URL=http://www.shallalist.de/Downloads/shallalist.tar.gz
-      # I have some config files I want to overwrite
-      # e.g. squidGuard.conf, wpad.dat and block.html:
-      - SQUID_CONFIG_SOURCE=/custom-config
-      #- SQUID_UID=1000          # workaround for folder mapping problem on MAC OS: UserID for user proxy
-    ports:
-      - "3128:3128"
-      - "80:80"
-    expose:
-      - 3128
-      - 80
-    volumes:
-      # please adapt this to your needs
-      - /home/derk/docker-squidguard-elk/myconfig:/custom-config
-      - /var/log/squid3
-
-  elk:
-    build: ./elk
-    hostname: elk
-    environment:
-      - TZ=CEST
-    ports:
-      - "5601:5601"
-      - "9200:9200"
-      - "5000:5000"
-      - "5044:5044"
-    expose:
-      - 5601
-      - 9200
-      - 5000
-      - 5044
-
-  filebeat:
-    build: ./filebeat
-    environment:
-      - TZ=CEST
-      - LOGSTASH_HOST=elk
-      - LOGSTASH_PORT=5000
-    links:
-      - elk
-      - squidguard
-    volumes_from:
-      - squidguard
+filebeat:
+  build: ./filebeat
+  environment:
+    - TZ=CEST
+    - LOGSTASH_HOST=elk
+    - LOGSTASH_PORT=5000
+  links:
+    - elk
+    - squidguard
+  volumes_from:
+    - squidguard
