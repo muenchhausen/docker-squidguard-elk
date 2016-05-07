@@ -11,14 +11,14 @@ before_install:
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
 
-install:
-  - docker-compose build
-  - docker-compose up --force-recreate
-
 script:
-  - wait 10
-  - docker-compose ps | grep -e "dockersquidguardelk_elk_1 .* Up"
-  - docker-compose ps | grep -e "dockersquidguardelk_filebeat_1 .* Up"
-  - docker-compose ps | grep -e "dockersquidguardelk_squidguard_1 .* Up"
-  - docker-compose stop
+  - docker-compose build
+  - docker-compose run filebeat curl --retry 10 --retry-delay 5 -v -s -L -x http://squidguard:3128 -o /dev/null https://www.google.com
+
+#script:
+#  - wait 10
+#  - docker-compose ps | grep -e "dockersquidguardelk_elk_1 .* Up"
+#  - docker-compose ps | grep -e "dockersquidguardelk_filebeat_1 .* Up"
+#  - docker-compose ps | grep -e "dockersquidguardelk_squidguard_1 .* Up"
+#  - docker-compose stop
 
