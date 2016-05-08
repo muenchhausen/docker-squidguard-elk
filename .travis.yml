@@ -15,13 +15,13 @@ script:
   - docker-compose build
   - docker-compose up -d
   - docker-compose ps
-  - docker-compose ps | grep -e "dockersquidguardelk_elk_1 .* Up"
-  - docker-compose ps | grep -e "dockersquidguardelk_filebeat_1 .* Up"
-  - docker-compose ps | grep -e "dockersquidguardelk_squidguard_1 .* Up"
+  - docker-compose ps elk | grep Up
+  - docker-compose ps filebeat | grep Up
+  - docker-compose ps squidguard | grep Up
   - docker-compose run filebeat sleep 10
   - docker-compose run filebeat grep "GET /startupTest1.html" /var/log/squid3/access.log
-  - docker-compose run filebeat   curl --retry 10 --retry-delay 5 -v -s -L -o /dev/null http://squidguard/wpat.dat
-  - docker-compose run squidguard curl --retry 10 --retry-delay 5 -v -s -L -o /dev/null -x http://squidguard:3128 http://www.muenchhausen.de
+  - docker-compose run filebeat curl --retry 10 --retry-delay 5 -v -s -L -o /dev/null http://squidguard/wpat.dat
+  - docker-compose run filebeat curl --retry 10 --retry-delay 5 -v -s -L -o /dev/null -x http://squidguard:3128 http://www.muenchhausen.de
   - exit $?
 
 notifications:
