@@ -11,7 +11,7 @@ squidguard:
     # I have some config files I want to overwrite
     # e.g. squidGuard.conf, wpad.dat and block.html:
     - SQUID_CONFIG_SOURCE=/custom-config
-    #- SQUID_UID=1000          # workaround for folder mapping problem on MAC OS: UserID for user proxy
+    - SQUID_UID=1000          # workaround for folder mapping problem on MAC OS: UserID for user proxy
   ports:
     - "3128:3128"
     - "80:80"
@@ -20,7 +20,7 @@ squidguard:
     - 80
   volumes:
     # please adapt this to your needs
-    - /home/derk/docker-squidguard-elk/myconfig:/custom-config
+    - ./myconfig:/custom-config
     - /var/log/squid3
 
 elk:

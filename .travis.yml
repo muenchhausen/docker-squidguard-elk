@@ -14,14 +14,21 @@ before_install:
 script:
   - docker-compose build
   - docker-compose up -d
+  # everything running?
   - docker-compose ps
   - docker-compose ps elk | grep Up
   - docker-compose ps filebeat | grep Up
   - docker-compose ps squidguard | grep Up
+  # it will take some time, test if container is accepting a command
   - docker-compose run filebeat sleep 10
-  #- docker-compose run filebeat grep "GET /startupTest1.html" /var/log/squid3/access.log
+  # is squidguard reachable from filebeat?
   - docker-compose run filebeat curl --retry 10 --retry-delay 5 -v -s -L -o /dev/null http://squidguard/wpat.dat
+  # test a website that is NOT blocked
   - docker-compose run filebeat curl --retry 10 --retry-delay 5 -v -s -L -o /dev/null -x http://squidguard:3128 http://www.muenchhausen.de
+  - docker-compose run filebeat grep -E 'muenchhausen\.de/? - HIER_DIRECT/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' /var/log/squid3/access.log
+  # test a website that is blocked
+  - docker-compose run filebeat docker-compose run filebeat curl --retry 10 --retry-delay 5 -v -s -L -x http://squidguard:3128 http://test.com | grep "This URL was blocked"
+  - docker-compose run filebeat grep -E 'test\.com/? - HIER_DIRECT/::1' /var/log/squid3/access.log
 
 notifications:
   email:

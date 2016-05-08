@@ -2,7 +2,7 @@
 
 this repository combines the Docker Containers [muenchhausen/docker-squidguard](https://hub.docker.com/r/muenchhausen/docker-squidguard/) and [sebp/elk](https://hub.docker.com/r/sebp/elk/) to visualize all proxy requests with kibana. 
 
-The Docker way is combining containers with single responsibility: Here we reuse available Containers and add a dedicated filebeat Container that collects the log files. This is simply done by a docker-compose project that shares log volumes.
+We are following the Docker way: We combine containers with single responsibility and reuse available Containers. To collect log files it is mostly recommended to run a dedicated filebeat Container that accesses log volumnes and not to install filebeat everywhere. 
 
 ![Screenshot](img/kibana.png)
 
