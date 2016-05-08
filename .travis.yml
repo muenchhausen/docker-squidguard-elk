@@ -27,7 +27,7 @@ script:
   - docker-compose run filebeat curl --retry 10 --retry-delay 5 -v -s -L -o /dev/null -x http://squidguard:3128 http://www.muenchhausen.de
   - docker-compose run filebeat grep -E 'muenchhausen\.de/? - HIER_DIRECT/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' /var/log/squid3/access.log
   # test a website that is blocked
-  - docker-compose run filebeat docker-compose run filebeat curl --retry 10 --retry-delay 5 -v -s -L -x http://squidguard:3128 http://test.com | grep "This URL was blocked"
+  - docker-compose run filebeat curl --retry 10 --retry-delay 5 -v -s -L -x http://squidguard:3128 http://test.com | grep "This URL was blocked"
   - docker-compose run filebeat grep -E 'test\.com/? - HIER_DIRECT/::1' /var/log/squid3/access.log
 
 notifications:
