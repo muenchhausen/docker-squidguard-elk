@@ -1,4 +1,4 @@
-## Introduction
+## Introduction [![Build Status](https://travis-ci.org/muenchhausen/docker-squidguard-elk.svg?branch=master)](https://travis-ci.org/muenchhausen/docker-squidguard-elk)
 
 this repository combines the Docker Containers [muenchhausen/docker-squidguard](https://hub.docker.com/r/muenchhausen/docker-squidguard/) and [sebp/elk](https://hub.docker.com/r/sebp/elk/) to visualize all proxy requests with kibana. 
 
