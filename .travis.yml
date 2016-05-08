@@ -14,8 +14,10 @@ before_install:
 script:
   - docker-compose build
   - docker-compose up -d
-  - wait 10
-  - docker-compose run filebeat curl --retry 10 --retry-delay 5 -v -s -L -x http://squidguard:3128 -o /dev/null https://www.google.com
+  - docker-compose ps
+  - docker-compose run filebeat sleep 10
+  - docker-compose run filebeat curl --retry 10 --retry-delay 5 -v -s -L -x http://squidguard:3128 -o /dev/null http://squidguard/wpad.dat
+  - exit $?
 
 #script:
 #  - wait 10
@@ -24,3 +26,6 @@ script:
 #  - docker-compose ps | grep -e "dockersquidguardelk_squidguard_1 .* Up"
 #  - docker-compose stop
 
+notifications:
+  email:
+    - derk@muenchhausen.de
