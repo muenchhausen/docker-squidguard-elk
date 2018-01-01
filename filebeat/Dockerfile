@@ -1,4 +1,4 @@
-FROM phusion/baseimage:latest
+FROM phusion/baseimage:0.9.22
 MAINTAINER derk@muenchhausen.de
 
 ENV VERSION=1.2.1 PLATFORM=x86_64

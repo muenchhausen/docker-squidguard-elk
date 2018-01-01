@@ -1,5 +1,5 @@
 squidguard:
-  image: muenchhausen/docker-squidguard:latest
+  image: muenchhausen/docker-squidguard:1.0.0
   environment:
     - TZ=CEST
     # I want to use WPAD
