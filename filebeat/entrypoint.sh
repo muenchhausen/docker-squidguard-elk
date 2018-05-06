@@ -16,7 +16,7 @@ if [ "$1" = 'start' ]; then
 
   # upload index template to Elasticsearch 
   for try in {1..10} ; do
-    curl -XPUT 'http://elk:9200/_template/filebeat?pretty' -d@${FILEBEAT_HOME}/filebeat.template.json
+    curl -H "Content-Type: application/json" -XPUT 'http://elk:9200/_template/filebeat?pretty' -d@${FILEBEAT_HOME}/filebeat.template.json
     if [ $? -eq 0 ]; then 
       break
     fi
